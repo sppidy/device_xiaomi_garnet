@@ -40,6 +40,7 @@ TARGET_2ND_CPU_VARIANT := cortex-a76
 
 # Audio
 AUDIO_FEATURE_ENABLED_DLKM := true
+AUDIO_FEATURE_ENABLED_DS2_DOLBY_DAP := true
 AUDIO_FEATURE_ENABLED_DTS_EAGLE := false
 AUDIO_FEATURE_ENABLED_GEF_SUPPORT := true
 AUDIO_FEATURE_ENABLED_HW_ACCELERATED_EFFECTS := false
@@ -57,6 +58,11 @@ TARGET_NO_BOOTLOADER := true
 # Display
 TARGET_SCREEN_DENSITY := 540
 
+# Dolby Vision
+SOONG_CONFIG_NAMESPACES += dolby_vision
+SOONG_CONFIG_dolby_vision += enabled
+SOONG_CONFIG_dolby_vision_enabled := true
+
 # Filesystem
 TARGET_FS_CONFIG_GEN := $(DEVICE_PATH)/configs/config.fs
 
@@ -65,12 +71,13 @@ BOARD_USES_QCOM_HARDWARE := true
 
 # HIDL
 DEVICE_MATRIX_FILE := hardware/qcom-caf/common/compatibility_matrix.xml
-DEVICE_FRAMEWORK_COMPATIBILITY_MATRIX_FILE := \
-    hardware/qcom-caf/common/vendor_framework_compatibility_matrix.xml \
-    hardware/xiaomi/vintf/xiaomi_framework_compatibility_matrix.xml \
-    vendor/lineage/config/device_framework_matrix.xml
+DEVICE_FRAMEWORK_COMPATIBILITY_MATRIX_FILE += \
+    $(DEVICE_PATH)/configs/vintf/vendor_framework_compatibility_matrix.xml \
+    $(DEVICE_PATH)/configs/vintf/xiaomi_framework_compatibility_matrix.xml \
+    $(DEVICE_PATH)/configs/vintf/device_framework_matrix.xml
 
-DEVICE_MANIFEST_FILE := $(DEVICE_PATH)/configs/hidl/manifest.xml
+#DEVICE_MANIFEST_FILE
+DEVICE_MANIFEST_FILE += $(DEVICE_PATH)/configs/hidl/manifest.xml
 
 $(foreach sku, CN GL, \
     $(eval ODM_MANIFEST_SKUS += $(sku)) \
@@ -193,6 +200,8 @@ ENABLE_VENDOR_RIL_SERVICE := true
 include device/qcom/sepolicy_vndr/SEPolicy.mk
 
 BOARD_VENDOR_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy/vendor
+SYSTEM_EXT_PUBLIC_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy/public
+BOARD_VENDOR_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy/dolby
 
 # System properties
 TARGET_ODM_PROP += $(DEVICE_PATH)/props/odm.prop

@@ -96,12 +96,19 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/audio/mixer_paths_parrot_qrd.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio/sku_parrot/mixer_paths_parrot_qrd.xml \
     $(LOCAL_PATH)/configs/audio/resourcemanager_parrot_qrd.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio/sku_parrot/resourcemanager_parrot_qrd.xml
 
+
 PRODUCT_COPY_FILES += \
     frameworks/av/services/audiopolicy/config/audio_policy_volumes.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_policy_volumes.xml \
     frameworks/av/services/audiopolicy/config/bluetooth_audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/bluetooth_audio_policy_configuration.xml \
     frameworks/av/services/audiopolicy/config/default_volume_tables.xml:$(TARGET_COPY_OUT_VENDOR)/etc/default_volume_tables.xml \
     frameworks/av/services/audiopolicy/config/r_submix_audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/r_submix_audio_policy_configuration.xml \
     frameworks/av/services/audiopolicy/config/usb_audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/usb_audio_policy_configuration.xml
+
+# Dolby
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/configs/dolby/dax-default.xml:$(TARGET_COPY_OUT_VENDOR)/etc/dolby/dax-default.xml
+
+TARGET_EXCLUDES_AUDIOFX := true
 
 # Bluetooth
 PRODUCT_PACKAGES += \
@@ -148,6 +155,16 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.camera.full.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.camera.full.xml \
     frameworks/native/data/etc/android.hardware.camera.raw.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.camera.raw.xml
 
+# Charger
+PRODUCT_PACKAGES += \
+    libsuspend \
+    charger_res_images
+
+# Clone apps exemption
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/configs/sysconfig/preinstalled-packages-platform-xiaomi-product.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/sysconfig/preinstalled-packages-platform-xiaomi-product.xml
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/configs/media/media_codecs_dolby_audio.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_dolby_audio.xml
 # Configstore
 PRODUCT_PACKAGES += \
     vendor.qti.hardware.capabilityconfigstore@1.0.vendor
@@ -181,6 +198,11 @@ PRODUCT_PACKAGES += \
 
 PRODUCT_COPY_FILES += \
     hardware/qcom-caf/sm8450/display/config/snapdragon_color_libs_config.xml:$(TARGET_COPY_OUT_VENDOR)/etc/snapdragon_color_libs_config.xml
+
+# Viper
+$(call inherit-product-if-exists, packages/apps/ViPER4AndroidFX/config.mk)
+
+TARGET_EXCLUDES_AUDIOFX := true
 
 # DRM
 PRODUCT_PACKAGES += \
@@ -438,6 +460,22 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     librmnetctl
 
+# Spatial Audio
+PRODUCT_PACKAGES += \
+    libspatialaudio
+
+PRODUCT_COPY_FILES += \
+    frameworks/native/data/etc/android.hardware.sensor.dynamic.head_tracker.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.sensor.dynamic.head_tracker.xml
+
+PRODUCT_PROPERTY_OVERRIDES += \
+       audio.spatializer.effect.util_clamp_min=300
+
+PRODUCT_PROPERTY_OVERRIDES += \
+       ro.audio.spatializer_enabled=true \
+       ro.audio.spatializer_transaural_enabled_default=false \
+       persist.vendor.audio.spatializer.speaker_enabled=true \
+       ro.vendor.audio.feature.spatial=7
+
 # Sensors
 PRODUCT_PACKAGES += \
     android.hardware.sensors@2.1-service.xiaomi-multihal \
@@ -548,6 +586,11 @@ PRODUCT_PACKAGES += \
 
 PRODUCT_COPY_FILES += \
     hardware/xiaomi/vibrator/excluded-input-devices.xml:$(TARGET_COPY_OUT_VENDOR)/etc/excluded-input-devices.xml
+
+# VNDK
+PRODUCT_COPY_FILES += \
+    prebuilts/vndk/v33/arm/arch-arm-armv7-a-neon/shared/vndk-core/libstagefright_foundation.so:$(TARGET_COPY_OUT_VENDOR)/lib/libstagefright_foundation-v33.so \
+    prebuilts/vndk/v33/arm64/arch-arm64-armv8-a/shared/vndk-core/libstagefright_foundation.so:$(TARGET_COPY_OUT_VENDOR)/lib64/libstagefright_foundation-v33.so
 
 # WiFi
 PRODUCT_PACKAGES += \

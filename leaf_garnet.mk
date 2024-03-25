@@ -19,7 +19,7 @@ $(call inherit-product-if-exists, vendor/xiaomi/garnet-miuicamera/products/miuic
 
 # Sign the build if exists
 $(call inherit-product-if-exists, vendor/keys/keys.mk)
-
+TARGET_DISABLE_EPPE := true
 PRODUCT_NAME := leaf_garnet
 PRODUCT_DEVICE := garnet
 PRODUCT_MANUFACTURER := Xiaomi
