@@ -241,7 +241,10 @@ PRODUCT_PACKAGES += \
 
 # Graphics
 PRODUCT_PACKAGES += \
-    libgui_vendor
+    libgui_vendor \
+    android.hardware.graphics.common-V4-ndk \
+    libexif.vendor \
+    liblz4.vendor
 
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.opengles.aep.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.opengles.aep.xml \
