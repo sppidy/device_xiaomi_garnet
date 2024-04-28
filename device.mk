@@ -243,6 +243,9 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     IFAAService
 
+# Inherit BCR
+$(call inherit-product, vendor/bcr/bcr.mk)
+
 # Init
 PRODUCT_PACKAGES += \
     charger_fw_fstab.qti \
@@ -367,6 +370,7 @@ $(foreach sku, CN GL, \
         frameworks/native/data/etc/com.nxp.mifare.xml:$(TARGET_COPY_OUT_ODM)/etc/permissions/sku_$(sku)/com.nxp.mifare.xml))
 
 # Overlay
+DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay-evolution
 PRODUCT_PACKAGES += \
     ApertureOverlayGarnet \
     CarrierConfigOverlayGarnet \
@@ -486,6 +490,9 @@ PRODUCT_PACKAGES += \
     update_engine \
     update_engine_sideload \
     update_verifier
+
+# Udfps
+TARGET_HAS_UDFPS := true
 
 # USB
 PRODUCT_PACKAGES += \
