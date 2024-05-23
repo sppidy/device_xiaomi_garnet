@@ -10,3 +10,7 @@ persist.vendor.data.mode=concurrent
 ril.subscription.types=NV,RUIM
 telephony.lteOnCdmaDevice=1
 persist.vendor.vonr_setting_support=1
+
+#DroidX
+ro.droidx.maintainer=sppidy
+

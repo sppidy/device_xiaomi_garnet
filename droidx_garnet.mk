@@ -34,3 +34,5 @@ PRODUCT_BUILD_PROP_OVERRIDES += \
 BUILD_FINGERPRINT := Redmi/garnet_global/garnet:13/TKQ1.221114.001/V14.0.6.0.TNRMIXM:user/release-keys
 
 PRODUCT_GMS_CLIENTID_BASE := android-xiaomi
+
+DROIDX_GAPPS := true
