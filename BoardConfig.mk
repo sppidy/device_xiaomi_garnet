@@ -73,7 +73,7 @@ DEVICE_FRAMEWORK_COMPATIBILITY_MATRIX_FILE += \
     hardware/xiaomi/vintf/xiaomi_framework_compatibility_matrix.xml \
     vendor/droidx/config/device_framework_matrix.xml
 
-DEVICE_MANIFEST_FILE := $(DEVICE_PATH)/configs/hidl/manifest.xml
+DEVICE_MANIFEST_FILE += $(DEVICE_PATH)/configs/hidl/manifest.xml
 
 $(foreach sku, CN GL, \
     $(eval ODM_MANIFEST_SKUS += $(sku)) \
