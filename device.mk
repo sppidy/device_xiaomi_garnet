@@ -563,4 +563,4 @@ PRODUCT_BOOT_JARS += \
 $(call inherit-product, vendor/xiaomi/garnet/garnet-vendor.mk)
 
 # Vendor Dolby
-$(call inherit-product, vendor/dolby/dolby.mk)
+$(call inherit-product-if-exists, vendor/dolby/dolby.mk)
