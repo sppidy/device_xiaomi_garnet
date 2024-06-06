@@ -36,3 +36,5 @@ BUILD_FINGERPRINT := Redmi/garnet_global/garnet:13/TKQ1.221114.001/V14.0.6.0.TNR
 PRODUCT_GMS_CLIENTID_BASE := android-xiaomi
 
 DROIDX_GAPPS := true
+
+EXTRA_UDFPS_ANIMATIONS := false
