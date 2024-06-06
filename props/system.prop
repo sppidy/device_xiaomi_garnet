@@ -12,6 +12,6 @@ telephony.lteOnCdmaDevice=1
 persist.vendor.vonr_setting_support=1
 
 #DroidX
-ro.droidx.maintainer=sppidy
+ro.droidx.maintainer=JYR and sppidy
 ro.droidx.chipsset=Snapdragon 7s Gen2
 ro.droidx.display_resolution=6.67" AMOLED 2712 × 1220
