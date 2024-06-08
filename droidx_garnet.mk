@@ -15,7 +15,7 @@ $(call inherit-product, vendor/droidx/config/common_full_phone.mk)
 $(call inherit-product, device/xiaomi/garnet/device.mk)
 
 # Inherit from the MiuiCamera setup
-#$(call inherit-product-if-exists, vendor/xiaomi/garnet-miuicamera/products/miuicamera.mk)
+$(call inherit-product-if-exists, vendor/xiaomi/garnet-miuicamera/products/miuicamera.mk)
 
 # DroidX stuff
 DROIDX_BUILD_TYPE := OFFICIAL
