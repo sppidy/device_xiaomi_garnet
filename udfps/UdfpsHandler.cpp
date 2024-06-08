@@ -1,10 +1,11 @@
 /*
- * Copyright (C) 2024 The LineageOS Project
+ * Copyright (C) 2022 The LineageOS Project
+ *               2023 Paranoid Android
  *
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#define LOG_TAG "UdfpsHandler.garnet"
+#define LOG_TAG "UdfpsHandler.xiaomi13"
 
 #include <android-base/logging.h>
 #include <android-base/properties.h>
@@ -21,15 +22,21 @@
 #include "xiaomi_touch.h"
 
 #define COMMAND_NIT 10
-#define PARAM_NIT_FOD 1
-#define PARAM_NIT_NONE 0
+#define TARGET_BRIGHTNESS_OFF 0
+#define TARGET_BRIGHTNESS_1000NIT 1
+#define TARGET_BRIGHTNESS_110NIT 6
+
+#define LOW_BRIGHTNESS_THRESHHOLD 100
 
 #define COMMAND_FOD_PRESS_STATUS 1
+#define COMMAND_FOD_PRESS_X 2
+#define COMMAND_FOD_PRESS_Y 3
 #define PARAM_FOD_PRESSED 1
 #define PARAM_FOD_RELEASED 0
 
 #define FOD_STATUS_OFF 0
 #define FOD_STATUS_ON 1
+#define FOD_STATUS_OFF_UNTIL_SUSPEND 3
 
 #define TOUCH_DEV_PATH "/dev/xiaomi-touch"
 #define TOUCH_MAGIC 'T'
@@ -63,15 +70,12 @@ static bool readBool(int fd) {
 
 static disp_event_resp* parseDispEvent(int fd) {
     char event_data[1024] = {0};
-    ssize_t size;
+    ssize_t size = read(fd, event_data, sizeof(event_data));
 
-    memset(event_data, 0x0, sizeof(event_data));
-    size = read(fd, event_data, sizeof(event_data));
     if (size < 0) {
         LOG(ERROR) << "read fod event failed";
         return nullptr;
     }
-
     if (size < sizeof(struct disp_event)) {
         LOG(ERROR) << "Invalid event size " << size << ", expect at least "
                    << sizeof(struct disp_event);
@@ -83,7 +87,7 @@ static disp_event_resp* parseDispEvent(int fd) {
 
 }  // anonymous namespace
 
-class XiaomiGarnetUdfpsHander : public UdfpsHandler {
+class XiaomiSm8550UdfpsHander : public UdfpsHandler {
   public:
     void init(fingerprint_device_t* device) {
         mDevice = device;
@@ -116,15 +120,33 @@ class XiaomiGarnetUdfpsHander : public UdfpsHandler {
                 }
 
                 bool pressed = readBool(fd);
+                mDevice->extCmd(mDevice, COMMAND_FOD_PRESS_X, pressed ? lastPressX : 0);
+                mDevice->extCmd(mDevice, COMMAND_FOD_PRESS_Y, pressed ? lastPressY : 0);
                 mDevice->extCmd(mDevice, COMMAND_FOD_PRESS_STATUS,
                                 pressed ? PARAM_FOD_PRESSED : PARAM_FOD_RELEASED);
+
+                // Get brightness
+                struct disp_brightness_req brightness_req;
+                int brightness = LOW_BRIGHTNESS_THRESHHOLD;
+                brightness_req.base.flag = 0;
+                brightness_req.base.disp_id = MI_DISP_PRIMARY;
+                rc = ioctl(disp_fd_.get(), MI_DISP_IOCTL_GET_BRIGHTNESS, &brightness_req);
+                if (rc) {
+                    LOG(ERROR) << "failed to get brightness, err: " << rc;
+                } else if (brightness_req.brightness > 0) {
+                    brightness = brightness_req.brightness;
+                }
+                LOG(DEBUG) << "brightness is: " << (int)brightness_req.brightness;
+                bool requestLowBrightness = !enrolling && brightness < LOW_BRIGHTNESS_THRESHHOLD;
 
                 // Request HBM
                 disp_local_hbm_req req;
                 req.base.flag = 0;
                 req.base.disp_id = MI_DISP_PRIMARY;
-                req.local_hbm_value = pressed ? LHBM_TARGET_BRIGHTNESS_WHITE_1000NIT
-                                              : LHBM_TARGET_BRIGHTNESS_OFF_FINGER_UP;
+                req.local_hbm_value =
+                        pressed ? (requestLowBrightness ? LHBM_TARGET_BRIGHTNESS_WHITE_110NIT
+                                                        : LHBM_TARGET_BRIGHTNESS_WHITE_1000NIT)
+                                : LHBM_TARGET_BRIGHTNESS_OFF_FINGER_UP;
                 ioctl(disp_fd_.get(), MI_DISP_IOCTL_SET_LOCAL_HBM, &req);
             }
         }).detach();
@@ -153,7 +175,7 @@ class XiaomiGarnetUdfpsHander : public UdfpsHandler {
             while (true) {
                 int rc = poll(&dispEventPoll, 1, -1);
                 if (rc < 0) {
-                    LOG(ERROR) << "failed to poll " << FOD_PRESS_STATUS_PATH << ", err: " << rc;
+                    LOG(ERROR) << "failed to poll " << DISP_FEATURE_PATH << ", err: " << rc;
                     continue;
                 }
 
@@ -171,18 +193,25 @@ class XiaomiGarnetUdfpsHander : public UdfpsHandler {
                 LOG(DEBUG) << "received data: " << std::bitset<8>(value);
 
                 bool localHbmUiReady = value & LOCAL_HBM_UI_READY;
+                bool requestLowBrightnessCapture = value & FOD_LOW_BRIGHTNESS_CAPTURE;
 
                 mDevice->extCmd(mDevice, COMMAND_NIT,
-                                localHbmUiReady ? PARAM_NIT_FOD : PARAM_NIT_NONE);
+                                localHbmUiReady
+                                        ? (requestLowBrightnessCapture ? TARGET_BRIGHTNESS_110NIT
+                                                                       : TARGET_BRIGHTNESS_1000NIT)
+                                        : TARGET_BRIGHTNESS_OFF);
             }
         }).detach();
     }
 
-    void onFingerDown(uint32_t /*x*/, uint32_t /*y*/, float /*minor*/, float /*major*/) {
-        LOG(INFO) << __func__;
+    void onFingerDown(uint32_t x, uint32_t y, float /*minor*/, float /*major*/) {
+        LOG(DEBUG) << __func__ << "x: " << x << ", y: " << y;
+        // Track x and y coordinates
+        lastPressX = x;
+        lastPressY = y;
 
         /*
-         * On fpc_fod devices, the waiting for finger message is not reliably sent...
+         * On fuxi, the waiting for finger message is not reliably sent...
          * The finger down message is only reliably sent when the screen is turned off, so enable
          * fod_status better late than never.
          */
@@ -195,13 +224,13 @@ class XiaomiGarnetUdfpsHander : public UdfpsHandler {
     }
 
     void onFingerUp() {
-        LOG(INFO) << __func__;
+        LOG(DEBUG) << __func__;
         // Ensure touchscreen is aware of the press state, ideally this is not needed
         setFingerDown(false);
     }
 
     void onAcquired(int32_t result, int32_t vendorCode) {
-        LOG(INFO) << __func__ << " result: " << result << " vendorCode: " << vendorCode;
+        LOG(DEBUG) << __func__ << " result: " << result << " vendorCode: " << vendorCode;
         if (result == FINGERPRINT_ACQUIRED_GOOD) {
             // Request to disable HBM already, even if the finger is still pressed
             disp_local_hbm_req req;
@@ -209,21 +238,10 @@ class XiaomiGarnetUdfpsHander : public UdfpsHandler {
             req.base.disp_id = MI_DISP_PRIMARY;
             req.local_hbm_value = LHBM_TARGET_BRIGHTNESS_OFF_FINGER_UP;
             ioctl(disp_fd_.get(), MI_DISP_IOCTL_SET_LOCAL_HBM, &req);
-
             if (!enrolling) {
-                setFodStatus(FOD_STATUS_OFF);
+                setFodStatus(FOD_STATUS_OFF_UNTIL_SUSPEND);
             }
-        }
-
-        /* vendorCode for goodix_fod devices:
-         * 21: waiting for finger
-         * 22: finger down
-         * 23: finger up
-         * On fpc_fod devices, the waiting for finger message is not reliably sent...
-         * The finger down message is only reliably sent when the screen is turned off, so enable
-         * fod_status better late than never.
-         */
-        if (!isFpcFod && vendorCode == 21) {
+        } else if (!isFpcFod && vendorCode == 21) {
             setFodStatus(FOD_STATUS_ON);
         } else if (isFpcFod && vendorCode == 22) {
             setFodStatus(FOD_STATUS_ON);
@@ -231,10 +249,10 @@ class XiaomiGarnetUdfpsHander : public UdfpsHandler {
     }
 
     void cancel() {
-        LOG(INFO) << __func__;
+        LOG(DEBUG) << __func__;
         enrolling = false;
 
-        setFodStatus(FOD_STATUS_OFF);
+        setFodStatus(FOD_STATUS_OFF_UNTIL_SUSPEND);
     }
 
     void preEnroll() {
@@ -251,7 +269,7 @@ class XiaomiGarnetUdfpsHander : public UdfpsHandler {
         LOG(INFO) << __func__;
         enrolling = false;
 
-        setFodStatus(FOD_STATUS_OFF);
+        setFodStatus(FOD_STATUS_OFF_UNTIL_SUSPEND);
     }
 
   private:
@@ -260,6 +278,7 @@ class XiaomiGarnetUdfpsHander : public UdfpsHandler {
     android::base::unique_fd disp_fd_;
     bool enrolling = false;
     bool isFpcFod;
+    uint32_t lastPressX, lastPressY;
 
     void setFodStatus(int value) {
         int buf[MAX_BUF_SIZE] = {MI_DISP_PRIMARY, Touch_Fod_Enable, value};
@@ -273,7 +292,7 @@ class XiaomiGarnetUdfpsHander : public UdfpsHandler {
 };
 
 static UdfpsHandler* create() {
-    return new XiaomiGarnetUdfpsHander();
+    return new XiaomiSm8550UdfpsHander();
 }
 
 static void destroy(UdfpsHandler* handler) {
