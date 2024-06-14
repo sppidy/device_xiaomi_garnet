@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2022 The LineageOS Project
- *               2023 flakeforever
+ * Copyright (C) 2023 The LineageOS Project
+
  *
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -130,7 +130,7 @@ class XiaomiGarnetUdfpsHander : public UdfpsHandler {
             registerDisplayEvent(fd, 0, MI_DISP_EVENT_FOD);
             registerDisplayEvent(fd, 1, MI_DISP_EVENT_FOD);
             // Brightness_clone
-            registerDisplayEvent(fd, 0, MI_DISP_EVENT_BRIGHTNESS_CLONE);
+            registerDisplayEvent(fd, 0, MI_DISP_EVENT_BRIGHTNESS_CLONE);            
             registerDisplayEvent(fd, 1, MI_DISP_EVENT_BRIGHTNESS_CLONE);
 
             struct pollfd dispEventPoll = {
@@ -194,7 +194,7 @@ class XiaomiGarnetUdfpsHander : public UdfpsHandler {
                                     LOG(INFO) << "fod high brightness capture start";
                                     extCmd(COMMAND_NIT, PARAM_NIT_FOD);
                                 }
-                                captureEnabled = true;
+                                captureEnabled = true;          
                             }
                         }
                         handledSize += *((uint32_t*)p + 2);
@@ -296,7 +296,7 @@ class XiaomiGarnetUdfpsHander : public UdfpsHandler {
         disp_event_req req;
         req.base.flag = 0;
         req.base.disp_id = id;
-        req.type = type;
+        req.type = type;        
         ioctl(fd, MI_DISP_IOCTL_REGISTER_EVENT, &req);
     }
 
@@ -305,7 +305,7 @@ class XiaomiGarnetUdfpsHander : public UdfpsHandler {
         req.base.flag = 0;
         req.base.disp_id = id;
         req.local_hbm_value = value;
-        ioctl(dispDevice.get(), MI_DISP_IOCTL_SET_LOCAL_HBM, &req);
+        ioctl(dispDevice.get(), MI_DISP_IOCTL_SET_LOCAL_HBM, &req);   
     }
 
     void setFodStatus(int value) {
