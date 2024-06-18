@@ -5,9 +5,9 @@
 #
 
 PRODUCT_MAKEFILES := \
-    $(LOCAL_DIR)/droidx_garnet.mk
+    $(LOCAL_DIR)/statix_garnet.mk
 
 COMMON_LUNCH_CHOICES := \
-    droidx_garnet-user \
-    droidx_garnet-userdebug \
-    droidx_garnet-eng
+    statix_garnet-user \
+    statix_garnet-userdebug \
+    statix_garnet-eng
