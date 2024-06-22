@@ -18,7 +18,6 @@ $(call inherit-product, device/xiaomi/garnet/device.mk)
 $(call inherit-product-if-exists, vendor/xiaomi/garnet-miuicamera/products/miuicamera.mk)
 
 # DroidX stuff
-DROIDX_BUILD_TYPE := OFFICIAL
 DROIDX_GAPPS := true
 TARGET_BOOT_ANIMATION_RES := 1080
 TARGET_HAS_UDFPS := true
