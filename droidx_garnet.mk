@@ -21,7 +21,7 @@ $(call inherit-product-if-exists, vendor/xiaomi/garnet-miuicamera/products/miuic
 DROIDX_BUILD_TYPE := OFFICIAL
 DROIDX_GAPPS := true
 TARGET_BOOT_ANIMATION_RES := 1080
-TARGET_HAS_UDFPS := false
+TARGET_HAS_UDFPS := true
 EXTRA_UDFPS_ANIMATIONS := true
 PRODUCT_NAME := droidx_garnet
 PRODUCT_DEVICE := garnet
