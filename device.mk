@@ -637,5 +637,10 @@ PRODUCT_PACKAGES += \
 PRODUCT_BOOT_JARS += \
     WfdCommon
 
+# WiFi firmware symlinks
+PRODUCT_PACKAGES += \
+    firmware_adrastea_wlan_mac.bin_symlink \
+    firmware_adrastea_WCNSS_qcom_cfg.ini_symlink
+
 # Vendor
 $(call inherit-product, vendor/xiaomi/garnet/garnet-vendor.mk)
