@@ -1,6 +1,5 @@
 name: Manual Find and Replace Workflow
 on: 
-  push:
   workflow_dispatch:
 jobs:
   find-and-replace:
@@ -13,8 +12,8 @@ jobs:
       - name: Find and Replace
         uses: jacobtomlinson/gha-find-replace@v3
         with:
-          find: generated_kernel_headers
-          replace: device_kernel_headers
+          find: "hardware/xiaomi"
+          replace: "vendor/xiaomi/hardware"
           exclude: '*.yml'
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v5
