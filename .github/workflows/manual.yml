@@ -1,0 +1,46 @@
+name: FandR
+on: 
+  workflow_dispatch:
+    inputs:
+      find:
+        # Friendly description to be shown in the UI instead of 'name'
+        description: 'What to find?'
+        # Input has to be provided for the workflow to run
+        required: true
+        # The data type of the input
+        type: string
+      replace:
+        # Friendly description to be shown in the UI instead of 'name'
+        description: 'What to replace?'
+        # Input has to be provided for the workflow to run
+        required: true
+        # The data type of the input
+        type: string
+
+jobs:
+  find-and-replace:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.TOKEN }}
+      - name: Find and Replace
+        uses: jacobtomlinson/gha-find-replace@v3
+        with:
+          find: ${{ inputs.find }}
+          replace: ${{ inputs.replace }}
+          exclude: '*.yml'
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        with:
+          commit_message: "garnet : Replace Kernelheader Names"
+          commit_options: '--no-verify --signoff'
+          commit_user_name: sppidy
+          commit_user_email: sppidytg@gmail.com
+          commit_author: sppidy <sppidytg@gmail.com>
+          push_options: '--force'
+          skip_dirty_check: true    
+          branch: ${{ github.ref_name }}
