@@ -1,0 +1,31 @@
+name: Manual Find and Replace Workflow
+on: 
+  push:
+  workflow_dispatch:
+jobs:
+  find-and-replace:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.TOKEN }}
+      - name: Find and Replace
+        uses: jacobtomlinson/gha-find-replace@v3
+        with:
+          find: generated_kernel_headers
+          replace: device_kernel_headers
+          exclude: '*.yml'
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        with:
+          commit_message: "garnet : Replace Kernelheader Names"
+          commit_options: '--no-verify --signoff'
+          commit_user_name: sppidy
+          commit_user_email: sppidytg@gmail.com
+          commit_author: sppidy <sppidytg@gmail.com>
+          push_options: '--force'
+          skip_dirty_check: true    
+          branch: ${{ github.ref_name }}
