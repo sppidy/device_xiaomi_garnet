@@ -36,7 +36,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
         with:
-          commit_message: "garnet : Replace Kernelheader Names"
+          commit_message: garnet | Changed ${{ inputs.find }} to ${{ inputs.replace }} 
           commit_options: '--no-verify --signoff'
           commit_user_name: sppidy
           commit_user_email: sppidytg@gmail.com
