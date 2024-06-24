@@ -1,6 +1,5 @@
 name: Manual Find and Replace Workflow
-on: 
-  workflow_dispatch:
+on: workflow_dispatch
 jobs:
   find-and-replace:
     runs-on: ubuntu-latest
