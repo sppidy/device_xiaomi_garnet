@@ -2,11 +2,16 @@ name: FandR
 on: 
   workflow_dispatch:
     inputs:
-      name:
+      find:
         # Friendly description to be shown in the UI instead of 'name'
-        description: 'Person to greet'
-        # Default value if no value is explicitly provided
-        default: 'World'
+        description: 'What to find?'
+        # Input has to be provided for the workflow to run
+        required: true
+        # The data type of the input
+        type: string
+      replace:
+        # Friendly description to be shown in the UI instead of 'name'
+        description: 'What to replace?'
         # Input has to be provided for the workflow to run
         required: true
         # The data type of the input
@@ -23,8 +28,8 @@ jobs:
       - name: Find and Replace
         uses: jacobtomlinson/gha-find-replace@v3
         with:
-          find: "hardware/xiaomi"
-          replace: "vendor/xiaomi/hardware"
+          find: ${{ inputs.find }}
+          replace: ${{ inputs.replace }}
           exclude: '*.yml'
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v5
