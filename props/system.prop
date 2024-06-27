@@ -2,7 +2,7 @@
 persist.vendor.cne.feature=1
 
 # DroidX
-ro.droidx.maintainer=JYR & sppidy
+ro.droidx.maintainer=sppidy
 ro.droidx.chipset=Snapdragon 7s gen 2
 ro.droidx.display_resolution=6.67" AMOLED 2712x1220
 
@@ -15,3 +15,4 @@ persist.vendor.data.mode=concurrent
 ril.subscription.types=NV,RUIM
 telephony.lteOnCdmaDevice=1
 persist.vendor.vonr_setting_support=1
+
