@@ -555,13 +555,18 @@ PRODUCT_PACKAGES += \
     wpa_supplicant \
     wpa_supplicant.conf \
     hostapd \
+    hostapd.accept \
+    hostapd.deny \
     hostapd_cli \
     libwifi-hal-ctrl \
     libwifi-hal-qcom \
     libwpa_client \
     libkeystore-engine-wifi-hidl \
     libkeystore-wifi-hidl \
-    libwifi-hal
+    libwifi-hal \
+    wpa_cli \
+    wpa_supplicant \
+    wpa_supplicant.conf
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/wifi/WCNSS_qcom_cfg.ini:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/adrastea/WCNSS_qcom_cfg.ini \
