@@ -71,7 +71,7 @@ PRODUCT_PACKAGES += \
     libsndcardparser \
     libvolumelistener
 
-AUDIO_HAL_DIR := hardware/qcom-caf/sm8450/audio/primary-hal
+AUDIO_HAL_DIR := hardware/qcom-caf/sm8450/audio/
 
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.audio.low_latency.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.audio.low_latency.xml \
