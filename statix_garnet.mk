@@ -15,11 +15,13 @@ $(call inherit-product, vendor/statix/config/gsm.mk)
 # Inherit from garnet device
 $(call inherit-product, device/xiaomi/garnet/device.mk)
 
+# Sign Build if keys exist
+$(call inherit-product-if-exists, vendor/keys/keys.mk)
+
 # Inherit from the MiuiCamera setup
 $(call inherit-product-if-exists, vendor/xiaomi/garnet-miuicamera/products/miuicamera.mk)
 
-# DroidX stuff
-DROIDX_GAPPS := true
+
 TARGET_BOOT_ANIMATION_RES := 1080
 TARGET_HAS_UDFPS := true
 EXTRA_UDFPS_ANIMATIONS := true
