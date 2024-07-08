@@ -17,12 +17,14 @@ $(call inherit-product, device/xiaomi/garnet/device.mk)
 # Inherit from the MiuiCamera setup
 $(call inherit-product-if-exists, vendor/xiaomi/garnet-miuicamera/products/miuicamera.mk)
 
-PRODUCT_NAME := lineage_garnet
+# Sign the build if exists
+$(call inherit-product-if-exists, vendor/keys/keys.mk)
+
+PRODUCT_NAME := leaf_garnet
 PRODUCT_DEVICE := garnet
 PRODUCT_MANUFACTURER := Xiaomi
 PRODUCT_BRAND := Redmi
 PRODUCT_MODEL := 2312DRA50G
-
 PRODUCT_SYSTEM_NAME := garnet_global
 PRODUCT_SYSTEM_DEVICE := garnet
 
