@@ -14,34 +14,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.lineageos.settings.doze;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.widget.Switch;
+import android.widget.CompoundButton;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.Preference.OnPreferenceChangeListener;
-import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragment;
 import androidx.preference.SwitchPreference;
 
 import com.android.settingslib.widget.MainSwitchPreference;
-import com.android.settingslib.widget.OnMainSwitchChangeListener;
 
 import org.lineageos.settings.R;
 import org.lineageos.settings.utils.FileUtils;
 
 public class DozeSettingsFragment extends PreferenceFragment
-        implements OnPreferenceChangeListener, OnMainSwitchChangeListener {
+        implements OnPreferenceChangeListener {
     private MainSwitchPreference mSwitchBar;
 
     private SwitchPreference mAlwaysOnDisplayPreference;
@@ -62,8 +58,10 @@ public class DozeSettingsFragment extends PreferenceFragment
         boolean dozeEnabled = DozeUtils.isDozeEnabled(getActivity());
 
         mSwitchBar = (MainSwitchPreference) findPreference(DozeUtils.DOZE_ENABLE);
-        mSwitchBar.addOnSwitchChangeListener(this);
-        mSwitchBar.setChecked(dozeEnabled);
+        if (mSwitchBar != null) {
+            mSwitchBar.addOnSwitchChangeListener((buttonView, isChecked) -> handleSwitchChange(isChecked));
+            mSwitchBar.setChecked(dozeEnabled);
+        }
 
         mAlwaysOnDisplayPreference = (SwitchPreference) findPreference(DozeUtils.ALWAYS_ON_DISPLAY);
         mAlwaysOnDisplayPreference.setEnabled(dozeEnabled);
@@ -111,12 +109,9 @@ public class DozeSettingsFragment extends PreferenceFragment
         return true;
     }
 
-    @Override
-    public void onSwitchChanged(Switch switchView, boolean isChecked) {
+    private void handleSwitchChange(boolean isChecked) {
         DozeUtils.enableDoze(getActivity(), isChecked);
         DozeUtils.checkDozeService(getActivity());
-
-        mSwitchBar.setChecked(isChecked);
 
         if (!isChecked) {
             DozeUtils.enableAlwaysOn(getActivity(), false);
