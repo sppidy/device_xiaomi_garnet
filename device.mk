@@ -204,6 +204,10 @@ $(call inherit-product-if-exists, packages/apps/ViPER4AndroidFX/config.mk)
 
 TARGET_EXCLUDES_AUDIOFX := true
 
+# Dolby Atmos
+PRODUCT_PACKAGES += \
+    XiaomiDolby
+
 # DRM
 PRODUCT_PACKAGES += \
     android.hardware.drm@1.4.vendor \

@@ -19,7 +19,6 @@ import android.view.Display.HdrCapabilities;
 import org.lineageos.settings.doze.DozeUtils;
 import org.lineageos.settings.thermal.ThermalUtils;
 import org.lineageos.settings.refreshrate.RefreshUtils;
-import org.lineageos.settings.dolby.DolbyUtils;
 
 public class BootCompletedReceiver extends BroadcastReceiver {
     private static final boolean DEBUG = false;
@@ -34,10 +33,7 @@ public class BootCompletedReceiver extends BroadcastReceiver {
             Log.d(TAG, "Received boot completed intent");
         DozeUtils.onBootCompleted(context);
         ThermalUtils.startService(context);
-        RefreshUtils.startService(context);      
-
-        // Dolby Atmos
-        DolbyUtils.getInstance(context);     
+        RefreshUtils.startService(context);        
 
         // Override HDR types
         final DisplayManager displayManager = context.getSystemService(DisplayManager.class);
