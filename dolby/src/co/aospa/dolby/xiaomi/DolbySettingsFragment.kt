@@ -181,6 +181,11 @@ class DolbySettingsFragment : PreferenceFragment(),
         updateProfileSpecificPrefs()
     }
 
+    override fun onResume() {
+        super.onResume()
+        updateProfileSpecificPrefs()
+    }
+
     private fun updateSpeakerState() {
         val device = audioManager!!.getDevicesForAttributes(ATTRIBUTES_MEDIA)[0]
         isOnSpeaker = (device.type == AudioDeviceInfo.TYPE_BUILTIN_SPEAKER)
