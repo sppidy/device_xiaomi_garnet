@@ -612,10 +612,8 @@ PRODUCT_COPY_FILES += \
 
 # Vibrator
 PRODUCT_PACKAGES += \
-    vendor.qti.hardware.vibrator.service.xiaomi
-
-PRODUCT_COPY_FILES += \
-    hardware/xiaomi/vibrator/excluded-input-devices.xml:$(TARGET_COPY_OUT_VENDOR)/etc/excluded-input-devices.xml
+    vendor.qti.hardware.vibrator.service \
+    libqtivibratoreffect.xiaomi
 
 # VNDK
 PRODUCT_COPY_FILES += \
@@ -664,8 +662,8 @@ PRODUCT_BOOT_JARS += \
 
 # WiFi firmware symlinks
 PRODUCT_PACKAGES += \
-    firmware_adrastea_wlan_mac.bin_symlink \
-    firmware_adrastea_WCNSS_qcom_cfg.ini_symlink
+    firmware_wlan_mac.bin_symlink \
+    firmware_WCNSS_qcom_cfg.ini_symlink
 
 # Vendor
 $(call inherit-product, vendor/xiaomi/garnet/garnet-vendor.mk)
