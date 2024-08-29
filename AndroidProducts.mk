@@ -5,9 +5,9 @@
 #
 
 PRODUCT_MAKEFILES := \
-    $(LOCAL_DIR)/leaf_garnet.mk
+    $(LOCAL_DIR)/euclid_garnet.mk
 
 COMMON_LUNCH_CHOICES := \
-    leaf_garnet-user \
-    leaf_garnet-userdebug \
-    leaf_garnet-eng
+    euclid_garnet-user \
+    euclid_garnet-userdebug \
+    euclid_garnet-eng
