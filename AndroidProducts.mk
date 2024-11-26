@@ -5,9 +5,9 @@
 #
 
 PRODUCT_MAKEFILES := \
-    $(LOCAL_DIR)/euclid_garnet.mk
+    $(LOCAL_DIR)/voltage_garnet.mk
 
 COMMON_LUNCH_CHOICES := \
-    euclid_garnet-user \
-    euclid_garnet-userdebug \
-    euclid_garnet-eng
+    voltage_garnet-user \
+    voltage_garnet-userdebug \
+    voltage_garnet-eng

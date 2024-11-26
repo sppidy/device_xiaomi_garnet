@@ -442,6 +442,8 @@ $(foreach sku, CN GL, \
 
 # Overlay
 #DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay/r
+DEVICE_PACKAGE_OVERLAYS += \
+    $(LOCAL_PATH)/overlay-voltage
 PRODUCT_PACKAGES += \
     ApertureOverlayGarnet \
     CarrierConfigOverlayGarnet \
