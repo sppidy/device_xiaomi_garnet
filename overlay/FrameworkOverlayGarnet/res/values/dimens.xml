@@ -25,5 +25,8 @@
     <dimen name="rounded_corner_radius_bottom">110.0px</dimen>
 
     <!-- Default paddings for content around the corners. -->
-    <dimen name="rounded_corner_content_padding">0.0dip</dimen>
+	<dimen name="rounded_corner_content_padding">0.0dip</dimen>
+
+	<!-- Starting padding for a left-aligned status bar clock -->
+	<dimen name="status_bar_left_clock_starting_padding">10dp</dimen>
 </resources>
