@@ -19,10 +19,7 @@ import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.Preference.OnPreferenceChangeListener
 import androidx.preference.PreferenceFragment
-<<<<<<< HEAD:dolby/src/co/aospa/dolby/xiaomi/DolbySettingsFragment.kt
 import androidx.preference.SwitchPreferenceCompat
-=======
-import androidx.preference.SwitchPreference
 import co.aospa.dolby.xiaomi.DolbyConstants
 import co.aospa.dolby.xiaomi.DolbyConstants.Companion.PREF_BASS
 import co.aospa.dolby.xiaomi.DolbyConstants.Companion.PREF_DIALOGUE
@@ -35,7 +32,6 @@ import co.aospa.dolby.xiaomi.DolbyConstants.Companion.PREF_RESET
 import co.aospa.dolby.xiaomi.DolbyConstants.Companion.PREF_SPK_VIRTUALIZER
 import co.aospa.dolby.xiaomi.DolbyConstants.Companion.PREF_STEREO
 import co.aospa.dolby.xiaomi.DolbyConstants.Companion.PREF_VOLUME
->>>>>>> daec8b0 (dolby: Add intelligent equalizer setting):dolby/src/co/aospa/dolby/xiaomi/preference/DolbySettingsFragment.kt
 import co.aospa.dolby.xiaomi.DolbyConstants.Companion.dlog
 import co.aospa.dolby.xiaomi.DolbyController
 import co.aospa.dolby.xiaomi.R
@@ -63,16 +59,16 @@ class DolbySettingsFragment : PreferenceFragment(),
         findPreference<ListPreference>(PREF_DIALOGUE)!!
     }
     private val bassPref by lazy {
-        findPreference<SwitchPreference>(PREF_BASS)!!
+        findPreference<SwitchPreferenceCompat>(PREF_BASS)!!
     }
     private val hpVirtPref by lazy {
-        findPreference<SwitchPreference>(PREF_HP_VIRTUALIZER)!!
+        findPreference<SwitchPreferenceCompat>(PREF_HP_VIRTUALIZER)!!
     }
     private val spkVirtPref by lazy {
-        findPreference<SwitchPreference>(PREF_SPK_VIRTUALIZER)!!
+        findPreference<SwitchPreferenceCompat>(PREF_SPK_VIRTUALIZER)!!
     }
     private val volumePref by lazy {
-        findPreference<SwitchPreference>(PREF_VOLUME)!!
+        findPreference<SwitchPreferenceCompat>(PREF_VOLUME)!!
     }
     private val resetPref by lazy {
         findPreference<Preference>(PREF_RESET)!!
@@ -156,6 +152,11 @@ class DolbySettingsFragment : PreferenceFragment(),
         super.onDestroyView()
     }
 
+    override fun onResume() {
+        super.onResume()
+        updateProfileSpecificPrefs()
+    }
+
     override fun onPreferenceChange(preference: Preference, newValue: Any): Boolean {
         dlog(TAG, "onPreferenceChange: key=${preference.key} value=$newValue")
         when (preference.key) {
@@ -203,11 +204,6 @@ class DolbySettingsFragment : PreferenceFragment(),
         dlog(TAG, "onCheckedChanged($isChecked)")
         dolbyController.dsOn = isChecked
         profilePref.setEnabled(isChecked)
-        updateProfileSpecificPrefs()
-    }
-
-    override fun onResume() {
-        super.onResume()
         updateProfileSpecificPrefs()
     }
 
