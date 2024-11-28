@@ -804,5 +804,13 @@
          or journal mode. The synchronous=NORMAL setting is a good choice for most applications
          running in WAL mode.
          Choices are: FULL, NORMAL, OFF. -->
-    <string name="db_wal_sync_mode" translatable="false">OFF</string>
+	<string name="db_wal_sync_mode" translatable="false">OFF</string>
+		<!-- Whether the device supports Smart Pixels -->
+		<bool name="config_supportSmartPixels">true</bool>
+
+		<!-- Whether to disable Smart Pixels on UDFPS -->
+		<bool name="config_disableSmartPixelsOnUDFPS">true</bool>
+
+		<!-- Whether devices suports in-display fingerprint when screen is off -->
+		<!--bool name="config_supportScreenOffUdfps">true</bool>-->
 </resources>
