@@ -5,6 +5,7 @@
 #
 
 DEVICE_PATH := device/xiaomi/garnet
+# TARGET_DEVICE_DIR := device/xiaomi/garnet
 
 BUILD_BROKEN_DUP_RULES := true
 BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
@@ -76,8 +77,6 @@ DEVICE_FRAMEWORK_COMPATIBILITY_MATRIX_FILE := \
     $(DEVICE_PATH)/configs/hidl/device_framework_compatibility_matrix.xml \
     hardware/qcom-caf/common/vendor_framework_compatibility_matrix.xml \
     hardware/xiaomi/vintf/xiaomi_framework_compatibility_matrix.xml \
-    hardware/qcom-caf/common/vendor_framework_compatibility_matrix_legacy.xml \
-    vendor/lineage/config/device_framework_matrix.xml
 
 DEVICE_MANIFEST_FILE := $(DEVICE_PATH)/configs/hidl/manifest.xml
 
@@ -114,8 +113,6 @@ BOARD_USES_GENERIC_KERNEL_IMAGE := true
 BOARD_KERNEL_CMDLINE := \
     video=vfb:640x400,bpp=32,memsize=3072000 \
     disable_dma32=on \
-    bootinfo.fingerprint=$(LINEAGE_VERSION) \
-    swinfo.fingerprint=$(LINEAGE_VERSION)
 
 BOARD_BOOTCONFIG := \
     androidboot.hardware=qcom \
@@ -123,18 +120,18 @@ BOARD_BOOTCONFIG := \
     androidboot.usbcontroller=a600000.dwc3
 
 # Kernel (prebuilt)
-KERNEL_PATH := $(DEVICE_PATH)-kernel
-BOARD_PREBUILT_DTBIMAGE_DIR := $(KERNEL_PATH)/images/dtbs/
-BOARD_PREBUILT_DTBOIMAGE := $(KERNEL_PATH)/images/dtbo.img
-
+TARGET_KERNEL_DIR ?= $(DEVICE_PATH)-kernel
+BOARD_KERNEL_SEPARATED_DTBO := true
+BOARD_PREBUILT_DTBIMAGE_DIR := $(TARGET_KERNEL_DIR)/images/dtbs
+BOARD_PREBUILT_DTBOIMAGE := $(TARGET_KERNEL_DIR)/images/dtbo.img
 TARGET_NO_KERNEL_OVERRIDE := true
-TARGET_KERNEL_SOURCE := $(KERNEL_PATH)/kernel-headers
+BOARD_BUILD_VENDOR_RAMDISK_IMAGE := true
 PRODUCT_COPY_FILES += \
-	$(KERNEL_PATH)/images/kernel:kernel
+	$(TARGET_KERNEL_DIR)/images/kernel:kernel
 
 # Kernel modules
-DLKM_MODULES_PATH := $(KERNEL_PATH)/modules/dlkm
-RAMDISK_MODULES_PATH := $(KERNEL_PATH)/modules/ramdisk
+DLKM_MODULES_PATH := $(TARGET_KERNEL_DIR)/modules/dlkm
+RAMDISK_MODULES_PATH := $(TARGET_KERNEL_DIR)/modules/ramdisk
 
 BOARD_VENDOR_KERNEL_MODULES := $(wildcard $(DLKM_MODULES_PATH)/*.ko)
 BOARD_VENDOR_KERNEL_MODULES_LOAD := $(patsubst %,$(DLKM_MODULES_PATH)/%,$(shell cat $(DLKM_MODULES_PATH)/modules.load))
@@ -149,7 +146,7 @@ BOARD_VENDOR_RAMDISK_KERNEL_MODULES_BLOCKLIST_FILE := $(RAMDISK_MODULES_PATH)/mo
 TARGET_HEALTH_CHARGING_CONTROL_SUPPORTS_BYPASS := false
 
 # Partitions
--include vendor/lineage/config/BoardConfigReservedSize.mk
+-include vendor/statix/config/BoardConfigStatix.mk
 
 BOARD_BOOTIMAGE_PARTITION_SIZE := 201326592
 BOARD_DTBOIMG_PARTITION_SIZE := 25165824
@@ -178,9 +175,6 @@ TARGET_COPY_OUT_SYSTEM := system
 TARGET_COPY_OUT_SYSTEM_EXT := system_ext
 TARGET_COPY_OUT_VENDOR := vendor
 TARGET_COPY_OUT_VENDOR_DLKM := vendor_dlkm
-
-# Platform
-TARGET_BOARD_PLATFORM := parrot
 
 # Power
 TARGET_POWERHAL_MODE_EXT := $(DEVICE_PATH)/power/power-mode.cpp

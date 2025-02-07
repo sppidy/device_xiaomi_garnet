@@ -16,6 +16,12 @@ $(call inherit-product, hardware/qcom-caf/common/common.mk)
 # Inherit from the MiuiCamera setup
 $(call inherit-product-if-exists, vendor/xiaomi/garnet-miuicamera/products/miuicamera.mk)
 
+# Board
+TARGET_BOARD_PLATFORM := parrot
+PRODUCT_USES_QCOM_HARDWARE := true
+PRODUCT_BOARD_PLATFORM := parrot
+PRODUCT_VENDOR_KERNEL_HEADERS := device/xiaomi/garnet/kernel-headers
+
 # A/B
 AB_OTA_POSTINSTALL_CONFIG += \
     RUN_POSTINSTALL_system=true \
@@ -77,7 +83,7 @@ PRODUCT_PACKAGES += \
     libsndcardparser \
     libvolumelistener
 
-AUDIO_HAL_DIR := hardware/qcom-caf/sm8450/audio/primary-hal
+AUDIO_HAL_DIR := hardware/qcom-caf/sm8450/audio/
 
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.audio.low_latency.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.audio.low_latency.xml \
@@ -407,30 +413,30 @@ $(foreach sku, CN GL JP, \
         frameworks/native/data/etc/com.android.nfc_extras.xml:$(TARGET_COPY_OUT_ODM)/etc/permissions/sku_$(sku)/com.android.nfc_extras.xml \
         frameworks/native/data/etc/com.nxp.mifare.xml:$(TARGET_COPY_OUT_ODM)/etc/permissions/sku_$(sku)/com.nxp.mifare.xml))
 
-# Overlay
-PRODUCT_PACKAGES += \
-    ApertureOverlayGarnet \
-    CarrierConfigOverlayGarnet \
-    DialerOverlayGarnet \
-    FrameworkOverlayGarnet \
-    FrameworkOverlayGarnetGLEsim \
-    FrameworkOverlayGarnetJPEsim \
-    LineageResXiaomi \
-    LineageSDKOverlayGarnet \
-    LineageSettingsOverlayGarnet \
-    LineageSystemUIOverlayGarnet \
-    SettingsOverlayGarnet \
-    SettingsProviderOverlayGarnetPoco \
-    SettingsProviderOverlayGarnetRedmi \
-    SettingsProviderOverlayGarnetRedmiCN \
-    SettingsProviderOverlayGarnetXIG05 \
-    SystemUIOverlayGarnet \
-    TelephonyOverlayGarnet \
-    WifiOverlayGarnet \
-    WifiOverlayGarnetPoco \
-    WifiOverlayGarnetRedmi \
-    WifiOverlayGarnetRedmiCN \
-    WifiOverlayGarnetXIG05
+# # Overlay
+# PRODUCT_PACKAGES += \
+#     ApertureOverlayGarnet \
+#     CarrierConfigOverlayGarnet \
+#     DialerOverlayGarnet \
+#     FrameworkOverlayGarnet \
+#     FrameworkOverlayGarnetGLEsim \
+#     FrameworkOverlayGarnetJPEsim \
+#     LineageResXiaomi \
+#     LineageSDKOverlayGarnet \
+#     LineageSettingsOverlayGarnet \
+#     LineageSystemUIOverlayGarnet \
+#     SettingsOverlayGarnet \
+#     SettingsProviderOverlayGarnetPoco \
+#     SettingsProviderOverlayGarnetRedmi \
+#     SettingsProviderOverlayGarnetRedmiCN \
+#     SettingsProviderOverlayGarnetXIG05 \
+#     SystemUIOverlayGarnet \
+#     TelephonyOverlayGarnet \
+#     WifiOverlayGarnet \
+#     WifiOverlayGarnetPoco \
+#     WifiOverlayGarnetRedmi \
+#     WifiOverlayGarnetRedmiCN \
+#     WifiOverlayGarnetXIG05
 
 # Power
 PRODUCT_PACKAGES += \
